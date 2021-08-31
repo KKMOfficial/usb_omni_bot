@@ -8,38 +8,51 @@ from controller import Compass
 from controller import DistanceSensor
 from controller import PositionSensor
 from controller import LidarPoint
+from controller import Display
+from matplotlib.animation import FuncAnimation
+from threading import Thread
 
 import math
 import numpy as np
+import matplotlib.pyplot as plt
 from numpy import linalg as la
+from multiprocessing import Process
 
 # the units are yet to be determined. But the scale is correct and it is in milimeters IRL.
 WHEEL_RADIUS = 0.029 
 # AKA r
 CHASSIS_AXLE_LENGTH = 0.22 
 # AKA l
+# fig = plt.figure()
+# ax = fig.add_subplot(1, 1, 1)
+
+
 
 
 # see the report(appendix A) to understand how alpha angle is defined.
-alpha0 = 0
-alpha1 = -math.radians(120)
-alpha2 = math.radians(120)
+alpha1 = math.radians(30)
+alpha2 = math.radians(150)
+alpha3 = math.radians(270)
 
 # the rolling constraint matrix from each wheel. (read the report for more detail)
-J1 = np.array([[math.sin(alpha0), -math.cos(alpha0), -CHASSIS_AXLE_LENGTH],
-                   [math.sin(alpha1), -math.cos(alpha1), -CHASSIS_AXLE_LENGTH],
-                   [math.sin(alpha2), -math.cos(alpha2), -CHASSIS_AXLE_LENGTH]])
+def J1_matrix(theta):
+    return np.array([[math.cos(alpha1+theta), math.sin(alpha1+theta), -CHASSIS_AXLE_LENGTH],
+                     [math.cos(alpha2+theta), math.sin(alpha2+theta), -CHASSIS_AXLE_LENGTH],
+                     [math.cos(alpha3+theta), math.sin(alpha3+theta), -CHASSIS_AXLE_LENGTH]])
 
 def rotation_matrix(theta):
-    return np.array([[math.cos(theta), math.sin(theta),     0   ],
-                     [-math.sin(theta), math.cos(theta),    0   ],
-                     [       0       ,         0      ,     1   ]])
+    return np.array([[math.cos(theta), -math.sin(theta),     0   ],
+                     [math.sin(theta),  math.cos(theta),     0   ],
+                     [       0       ,         0      ,      1   ]])
         
                      
-def inverse_kinematic(wheel_radius, theta, xi_dot):
-    R = rotation_matrix(theta)
-    phi_dot = (1/wheel_radius) * np.matmul(np.matmul(J1,R),xi_dot)
-    return phi_dot
+# def inverse_kinematic(wheel_radius, theta, xi_dot):
+    # R = rotation_matrix(theta)
+    # phi_dot = (1/wheel_radius) * np.matmul(np.matmul(J1,R),xi_dot)
+    # return phi_dot
+    
+def kinematic(robot_theta, phi_dot):
+    return WHEEL_RADIUS * np.matmul(np.linalg.inv(J1_matrix(robot_theta)),phi_dot)
 
 def calc_destance_from_line(l1, l2, p3):
     return la.norm(np.cross(l2-l1, l1-p3))/la.norm(l2-l1)
@@ -78,21 +91,34 @@ def exceeds_upper_limit(sonar_value,max_value):
     
 def exceeds_lower_limit(sonar_value,min_value):
     return sonar_value < min_value
+
+# def animate(i):
+    # global data
+    # data = data[-20:]
+    # ax.clear()
+    # for point in data:
+        # ax.scatter(point[0],point[1],color=point[2])
+    # plotting using multiprocessing liberary
+    # plt.xlim(-40.0,40.0,1.0)
+    # plt.ylim(-40.0,40.0,1.0)
+    # plt.title('Extended Kalman Filter Plot')
     
+
+
 # used in controller
 global move_turn
+
+# global data
 move_turn = 0
     
     
 if __name__ == "__main__":
-    
+    # data = []
     # create the Robot instance.
     robot = Robot()
     
     # get the time step of the current world.
     timestep = 32
-    
-    
         
     # define timers and corresponding reset values here
     # used for step movements toward goal; after each step robot will scan the environment
@@ -194,9 +220,12 @@ if __name__ == "__main__":
 
     # define robot state here
     robot_velocity = np.array([0.0, 0.0, 0.0])
-    robot_position = np.array([-16.5, -16.54, 0.0])
+    robot_position = np.array([-14.28, -16.6, 0.0])
     robot_omega    = np.array([0.0, 0.0, 0.0])
     robot_state    = START
+    robot_pos_estimate = np.array([robot_position[0],robot_position[1],robot_position[2]])
+    robot_pos_measure = np.array([robot_position[0],robot_position[1],robot_position[2]])
+    robot_phi_measure = np.array([0.0,0.0,0.0])
     
 
     
@@ -259,11 +288,65 @@ if __name__ == "__main__":
     compass = robot.getDevice("compass")
     compass.enable(timestep)
     
+    
+    # define position sensor variables
+    wheel_circum = 2 * math.pi * WHEEL_RADIUS
+    encoder_unit = wheel_circum/(2 * math.pi)
+    
+    
+    # graphic panel defined here
+    # display = robot.getDevice('display')
+    # px = [10,20,10, 0]
+    # py = [0, 10,20,10]
+    # display.drawPolygon(px,py)
+    
+    
+    Measurment_color = 'r'#0x44db09
+    Estimate_color = 'g'#0xd48750
+    Localization_color = 'b'#0x11f0a5
+    Reality_color = 'r'#0xd43343
+    # text_width_allignment = int(display.getWidth()*0.05)
+    # display.setFont("UbuntuMono-Regular",8,False)
+    # display.setColor(Measurment_color)
+    # display.drawText("Measurment ⬤",0+text_width_allignment,0)
+    # display.setColor(Estimate_color)
+    # display.drawText("Estimate ⬤",80+text_width_allignment,0)
+    # display.setColor(Localization_color )
+    # display.drawText("Localization ⬤",160+text_width_allignment,0)
+    # display.setColor(Reality_color )
+    # display.drawText("Reality ⬤",260+text_width_allignment,0)
+    
+    # initiate map grid
+    # grid_width = display.getWidth()*0.9
+    # grid_height = display.getHeight()*0.9
+    # grid_x = display.getWidth()*0.05
+    # grid_y = display.getHeight()*0.05
+    # section_width = 10#display.getWidth()*0.05
+    # section_height = 10#display.getHeight()*0.05
+    # display.setColor(0x524f46)
+    # for i in range(int(grid_width/section_width)+1):
+        # display.drawLine(int(grid_x+i*section_width),int(grid_y),int(grid_x+i*section_width),int(grid_y+grid_height)-5)
+    # for i in range(int(grid_height/section_height)+1):
+        # display.drawLine(int(grid_x),int(grid_y+i*section_height),int(grid_x+grid_width),int(grid_y+i*section_height))
+          
     # You should insert a getDevice-like function in order to get the
     # instance of a device of the robot. Something like:
     #  motor = robot.getMotor('motorname')
     #  ds = robot.getDistanceSensor('dsname')
     #  ds.enable(timestep)
+    
+    
+    # xs = []
+    # ys = []
+    # ani = FuncAnimation(fig, animate, fargs=(), interval=640)
+    
+
+    
+    plt.xlim(-40.0,40.0,1.0)
+    plt.ylim(-40.0,40.0,1.0)
+    plt.title('Extended Kalman Filter Plot')
+    plt.ion()
+    
     # Main loop:
     # - perform simulation steps until Webots is stopping the controller
     while robot.step(timestep) != -1:
@@ -280,9 +363,8 @@ if __name__ == "__main__":
         sonar_value = np.array([sonar_3.getValue(),sonar_1.getValue(),sonar_2.getValue()])
         
         # read position sensors values
-        current_position = encoder_unit*np.array([pos_1.getValue(),pos_2.getValue(),pos_3.getValue()])
-        curr_accumulated_estimated_displacement += encoder_unit * (current_position + previous_position)/2
-        previous_position = current_position
+        position_value = encoder_unit*np.array([pos_1.getValue(),pos_2.getValue(),pos_3.getValue()])
+
     
         # Process sensor data here.             
         
@@ -293,9 +375,8 @@ if __name__ == "__main__":
         # updating the currnet robot position
         robot_position[0] = gps_values[0];
         robot_position[1] = gps_values[1];
-          
         
-        
+       
         
         # states here
         if (robot_state == START):
@@ -489,21 +570,76 @@ if __name__ == "__main__":
         # print("robo_omega  >> ",robot_omega)
         # print(one_step_estimated_displacement)
         
+
         
         # update motor velocities
-        motor_1.setVelocity(robot_omega[0])
-        motor_2.setVelocity(robot_omega[1])
-        motor_3.setVelocity(robot_omega[2])
+        # add noise to motor velocity
+        noise = np.random.normal(0, 0.15, size=(3, 1))
+        motor_1.setVelocity(robot_omega[0] + float(noise[0]))
+        motor_2.setVelocity(robot_omega[1] + float(noise[1]))
+        motor_3.setVelocity(robot_omega[2] + float(noise[2]))
         
-
-       
         
+        
+        # define required coeffecients
+        # initial_x = 120
+        # initial_y = -120
+        # x_bias = initial_x + grid_x
+        # y_bias = initial_y + grid_y
+        # x_expansion = 5
+        # y_expansion = 5
+        
+        # estimate robot movement
+        estimate_displacement = WHEEL_RADIUS * kinematic(robot_position[2], robot_omega)
+        
+        
+        # update the estimation position
+        # display.setColor(Estimate_color)
+        # display.drawPixel(int(robot_pos_estimate[0]*x_expansion+x_bias),int(-robot_pos_estimate[1]*y_expansion+y_bias))
+        # draw_point_on_plot(estimate_displacement[0],estimate_displacement[1],Estimate_color)
+        
+        
+        # measure robot movement
+        robot_phi_measure = position_value - robot_phi_measure
+        measure_phi = robot_phi_measure / WHEEL_RADIUS
+        estimate_displacement = WHEEL_RADIUS*kinematic(robot_position[2], measure_phi)
+        robot_pos_measure[0] += estimate_displacement[0]
+        robot_pos_measure[1] += estimate_displacement[1]
+        
+        
+        # update robot measurement 
+        # display.setColor(Measurment_color)
+        # display.drawPixel(int(robot_pos_measure[0]*x_expansion+x_bias),int(-robot_pos_measure[1]*y_expansion+y_bias))
+        # draw_point_on_plot(robot_pos_measure[0],robot_pos_measure[1],Measurment_color)
+        
+        # updating the real position
+        # display.setColor(Reality_color)
+        # display.drawPixel(int(gps_values[0]*x_expansion+x_bias),int(-gps_values[1]*y_expansion+y_bias))
+        # draw_point_on_plot(gps_values[0],gps_values[2],Reality_color)
+        
+        # print(robot_phi_measure)
+        # print(pos_1.getType()) is rotational? yep.
+        # print("---------")
+        
+        
+        
+        # if(len(data)>20):
+            # ax.clear()
+            # for point in data:
+                # ax.scatter(point[0],point[1],color=point[2])
+            # figure.canvas.draw()
+            # figure.canvas.flush_events()
+            # data.clear()
+        # data.append([[estimate_displacement[0],estimate_displacement[1],Estimate_color]
+                           # ,[robot_pos_measure[0],robot_pos_measure[1],Measurment_color]
+                           # ,[gps_values[0],gps_values[2],Reality_color]])
         
         
     pass
     
     # Enter here exit cleanup code.
     
-    
-    
+
+
+
     

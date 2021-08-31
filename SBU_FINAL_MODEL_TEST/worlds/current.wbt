@@ -5,14 +5,14 @@ WorldInfo {
       material1 "ground_asphalt"
       material2 "wheel_rubber"
       coulombFriction [
-        60
+        180
       ]
     }
   ]
 }
 Viewpoint {
-  orientation 0.539984726933854 0.14654243454799992 0.8288195277350289 0.6328611006863848
-  position -12.124728234234716 -20.255090365601056 11.74846144234905
+  orientation -0.9863897020143421 0.0049319896100978745 -0.1643503308136108 0.060827378688758496
+  position -7.733377837948092 -5.615820963777334 66.93880109027343
 }
 TexturedBackground {
 }
@@ -33,9 +33,47 @@ Solid {
   name "GOAL"
 }
 Robot {
-  translation -14.28 -16.6 0.0690548
+  translation -13.35 -15.82 0.0690518
   rotation -0.9785662911332222 4.0002311901086377e-07 0.2059320612668402 3.758520688427117e-06
   children [
+    Lidar {
+      translation 0.0199997 0.0100008 0.31
+      rotation -0.5773509358554485 0.5773489358556708 0.5773509358554485 -2.094395307179586
+      name "head_hokuyo_sensor"
+      horizontalResolution 256
+      numberOfLayers 6
+      near 0.05
+      minRange 0.05
+      maxRange 8
+      type "rotating"
+      noise 0.1
+      defaultFrequency 2
+    }
+    Solid {
+      translation -0.0600001 2.07846e-07 0.31
+      rotation 0.5773509358554485 0.5773489358556708 0.5773509358554485 2.0944
+      scale 0.003 0.003 0.003
+      children [
+        Shape {
+          appearance PBRAppearance {
+            baseColor 0 0 0
+            roughness 1
+            metalness 0
+          }
+          geometry Mesh {
+            url [
+              "robot_parts/Garmin_Lidar_Lite_3.stl"
+            ]
+          }
+        }
+      ]
+      name "solid(7)"
+    }
+    Display {
+      rotation 1 0 0 3.14
+      width 400
+      height 250
+    }
     Transform {
       children [
         Solid {
@@ -1661,7 +1699,7 @@ Robot {
       9.887095e-22 0 0
     ]
   }
-  controller "final_controller"
+  controller "advanced_controller"
 }
 RectangleArena {
   rotation 1 0 0 1.5708
@@ -1689,437 +1727,6 @@ Solid {
       name "ground"
       contactMaterial "ground_asphalt"
     }
-    Solid {
-      translation -6.47 -2.53 1.06
-      rotation 1 0 0 1.5708
-      children [
-        Shape {
-          appearance PBRAppearance {
-            roughness 1
-            metalness 0
-          }
-          geometry Cylinder {
-            radius 0.5
-          }
-        }
-      ]
-    }
-    Solid {
-      translation -14.71 1.72 1.06
-      rotation 1 0 0 1.5708
-      children [
-        Shape {
-          appearance PBRAppearance {
-            roughness 1
-            metalness 0
-          }
-          geometry Sphere {
-            radius 0.3
-          }
-        }
-      ]
-      name "solid(7)"
-    }
-    Solid {
-      translation -14.71 1.72 0.4
-      rotation 1 0 0 1.5708
-      children [
-        Shape {
-          appearance PBRAppearance {
-            roughness 1
-            metalness 0
-          }
-          geometry Sphere {
-            radius 0.3
-          }
-        }
-      ]
-      name "solid(17)"
-    }
-    Solid {
-      translation -14.71 4.39 0.400001
-      rotation 1 0 0 1.5708
-      children [
-        Shape {
-          appearance PBRAppearance {
-            roughness 1
-            metalness 0
-          }
-          geometry Sphere {
-            radius 0.3
-          }
-        }
-      ]
-      name "solid(18)"
-    }
-    Solid {
-      translation -14.71 4.39 0.970001
-      rotation 1 0 0 1.5708
-      children [
-        Shape {
-          appearance PBRAppearance {
-            roughness 1
-            metalness 0
-          }
-          geometry Sphere {
-            radius 0.3
-          }
-        }
-      ]
-      name "solid(19)"
-    }
-    Solid {
-      translation -14.71 3.54 0.970001
-      rotation 1 0 0 1.5708
-      children [
-        Shape {
-          appearance PBRAppearance {
-            roughness 1
-            metalness 0
-          }
-          geometry Sphere {
-            radius 0.3
-          }
-        }
-      ]
-      name "solid(20)"
-    }
-    Solid {
-      translation -14.71 5.06 0.970006
-      rotation 1 0 0 1.5708
-      children [
-        Shape {
-          appearance PBRAppearance {
-            roughness 1
-            metalness 0
-          }
-          geometry Sphere {
-            radius 0.3
-          }
-        }
-      ]
-      name "solid(21)"
-    }
-    Solid {
-      translation -14.71 5.06 1.58001
-      rotation 1 0 0 1.5708
-      children [
-        Shape {
-          appearance PBRAppearance {
-            roughness 1
-            metalness 0
-          }
-          geometry Sphere {
-            radius 0.3
-          }
-        }
-      ]
-      name "solid(22)"
-    }
-    Solid {
-      translation -14.71 2.31 0.59
-      rotation 1 0 0 1.5708
-      children [
-        Shape {
-          appearance PBRAppearance {
-            roughness 1
-            metalness 0
-          }
-          geometry Sphere {
-            radius 0.3
-          }
-        }
-      ]
-      name "solid(8)"
-    }
-    Solid {
-      translation -14.71 1.19 0.749997
-      rotation 1 0 0 1.5708
-      children [
-        Shape {
-          appearance PBRAppearance {
-            roughness 1
-            metalness 0
-          }
-          geometry Sphere {
-            radius 0.3
-          }
-        }
-      ]
-      name "solid(11)"
-    }
-    Solid {
-      translation -14.71 2.31 1.43
-      rotation 1 0 0 1.5708
-      children [
-        Shape {
-          appearance PBRAppearance {
-            roughness 1
-            metalness 0
-          }
-          geometry Sphere {
-            radius 0.3
-          }
-        }
-      ]
-      name "solid(9)"
-    }
-    Solid {
-      translation -14.71 1.3 1.43
-      rotation 1 0 0 1.5708
-      children [
-        Shape {
-          appearance PBRAppearance {
-            roughness 1
-            metalness 0
-          }
-          geometry Sphere {
-            radius 0.3
-          }
-        }
-      ]
-      name "solid(13)"
-    }
-    Solid {
-      translation -14.71 3.81 1.43
-      rotation 1 0 0 1.5708
-      children [
-        Shape {
-          appearance PBRAppearance {
-            roughness 1
-            metalness 0
-          }
-          geometry Sphere {
-            radius 0.3
-          }
-        }
-      ]
-      name "solid(14)"
-    }
-    Solid {
-      translation -14.71 4.5 1.43
-      rotation 1 0 0 1.5708
-      children [
-        Shape {
-          appearance PBRAppearance {
-            roughness 1
-            metalness 0
-          }
-          geometry Sphere {
-            radius 0.3
-          }
-        }
-      ]
-      name "solid(23)"
-    }
-    Solid {
-      translation -14.71 5.66 1.43
-      rotation 1 0 0 1.5708
-      children [
-        Shape {
-          appearance PBRAppearance {
-            roughness 1
-            metalness 0
-          }
-          geometry Sphere {
-            radius 0.3
-          }
-        }
-      ]
-      name "solid(24)"
-    }
-    Solid {
-      translation -14.71 5.66 0.88
-      rotation 1 0 0 1.5708
-      children [
-        Shape {
-          appearance PBRAppearance {
-            roughness 1
-            metalness 0
-          }
-          geometry Sphere {
-            radius 0.3
-          }
-        }
-      ]
-      name "solid(25)"
-    }
-    Solid {
-      translation -14.71 5.35 0.42
-      rotation 1 0 0 1.5708
-      children [
-        Shape {
-          appearance PBRAppearance {
-            roughness 1
-            metalness 0
-          }
-          geometry Sphere {
-            radius 0.3
-          }
-        }
-      ]
-      name "solid(26)"
-    }
-    Solid {
-      translation -14.71 3.81 0.59
-      rotation 1 0 0 1.5708
-      children [
-        Shape {
-          appearance PBRAppearance {
-            roughness 1
-            metalness 0
-          }
-          geometry Sphere {
-            radius 0.3
-          }
-        }
-      ]
-      name "solid(15)"
-    }
-    Solid {
-      translation -14.71 3.21 0.36
-      rotation 1 0 0 1.5708
-      children [
-        Shape {
-          appearance PBRAppearance {
-            roughness 1
-            metalness 0
-          }
-          geometry Sphere {
-            radius 0.3
-          }
-        }
-      ]
-      name "solid(16)"
-    }
-    Solid {
-      translation -14.71 2.93 0.97
-      rotation 1 0 0 1.5708
-      children [
-        Shape {
-          appearance PBRAppearance {
-            roughness 1
-            metalness 0
-          }
-          geometry Sphere {
-            radius 0.3
-          }
-        }
-      ]
-      name "solid(10)"
-    }
-    Solid {
-      translation -14.65 3.21 1.56
-      rotation 1 0 0 1.5708
-      children [
-        Shape {
-          appearance PBRAppearance {
-            roughness 1
-            metalness 0
-          }
-          geometry Sphere {
-            radius 0.3
-          }
-        }
-      ]
-      name "solid(12)"
-    }
-    Solid {
-      translation -7.74 -2.53 1.06
-      rotation 1 0 0 1.5708
-      children [
-        Shape {
-          appearance PBRAppearance {
-            roughness 1
-            metalness 0
-          }
-          geometry Cylinder {
-            radius 0.5
-          }
-        }
-      ]
-      name "solid(2)"
-    }
-    Solid {
-      translation -7.1 -2.53 1.06
-      rotation 1 0 0 1.5708
-      children [
-        Shape {
-          appearance PBRAppearance {
-            roughness 1
-            metalness 0
-          }
-          geometry Cylinder {
-            radius 0.3
-          }
-        }
-      ]
-      name "solid(1)"
-    }
-    Solid {
-      translation -8.35 -2.53 1.06
-      rotation 1 0 0 1.5708
-      children [
-        Shape {
-          appearance PBRAppearance {
-            roughness 1
-            metalness 0
-          }
-          geometry Cylinder {
-            radius 0.3
-          }
-        }
-      ]
-      name "solid(3)"
-    }
-    Solid {
-      translation -8.76 -2.53 1.06
-      rotation 1 0 0 1.5708
-      children [
-        Shape {
-          appearance PBRAppearance {
-            roughness 1
-            metalness 0
-          }
-          geometry Cylinder {
-            radius 0.3
-          }
-        }
-      ]
-      name "solid(4)"
-    }
-    Solid {
-      translation -9.15 -2.53 1.06
-      rotation 1 0 0 1.5708
-      children [
-        Shape {
-          appearance PBRAppearance {
-            roughness 1
-            metalness 0
-          }
-          geometry Cylinder {
-            radius 0.3
-          }
-        }
-      ]
-      name "solid(5)"
-    }
-    Solid {
-      translation -9.58 -2.53 1.06
-      rotation 1 0 0 1.5708
-      children [
-        Shape {
-          appearance PBRAppearance {
-            roughness 1
-            metalness 0
-          }
-          geometry Cylinder {
-            radius 0.3
-          }
-        }
-      ]
-      name "solid(6)"
-    }
     Wall {
       translation -15.06 -12.87 1.03
       size 10 0.3 2
@@ -2130,144 +1737,6 @@ Solid {
       size 10 0.3 2
     }
     Wall {
-      translation -9.73878 -7.76783 1.03
-      rotation 0 0 1 0.785398
-      name "wall(19)"
-      size 0.3 0.3 2
-    }
-    Wall {
-      translation -9.73878 -8.12133 1.03
-      rotation 0 0 1 0.785398
-      name "wall(20)"
-      size 0.3 0.3 2
-    }
-    Wall {
-      translation -9.75292 -8.46069 1.03
-      rotation 0 0 1 0.785398
-      name "wall(21)"
-      size 0.3 0.3 2
-    }
-    Wall {
-      translation -9.79534 -8.77177 1.03
-      rotation 0 0 1 0.785398
-      name "wall(22)"
-      size 0.3 0.3 2
-    }
-    Wall {
-      translation -9.78827 -9.14648 1.03
-      rotation 0 0 1 0.785398
-      name "wall(23)"
-      size 0.3 0.3 2
-    }
-    Wall {
-      translation -9.7812 -9.45049 1.03
-      rotation 0 0 1 0.785398
-      name "wall(24)"
-      size 0.3 0.3 2
-    }
-    Wall {
-      translation -9.79534 -9.81813 1.03
-      rotation 0 0 1 0.785398
-      name "wall(25)"
-      size 0.3 0.3 2
-    }
-    Wall {
-      translation -9.79534 -10.1292 1.03
-      rotation 0 0 1 0.785398
-      name "wall(26)"
-      size 0.3 0.3 2
-    }
-    Wall {
-      translation -9.77413 -10.4476 1.03
-      rotation 0 0 1 0.785398
-      name "wall(27)"
-      size 0.3 0.3 2
-    }
-    Wall {
-      translation -9.73171 -10.7304 1.03
-      rotation 0 0 1 0.785398
-      name "wall(28)"
-      size 0.3 0.3 2
-    }
-    Wall {
-      translation -9.78826 -11.0129 1.03
-      rotation 0 0 1 0.785398
-      name "wall(29)"
-      size 0.3 0.3 2
-    }
-    Wall {
-      translation -9.77412 -11.2958 1.03
-      rotation 0 0 1 0.785398
-      name "wall(31)"
-      size 0.3 0.3 2
-    }
-    Wall {
-      translation -9.75998 -11.5787 1.03
-      rotation 0 0 1 0.785398
-      name "wall(32)"
-      size 0.3 0.3 2
-    }
-    Wall {
-      translation -9.75998 -11.876 1.03
-      rotation 0 0 1 0.785398
-      name "wall(33)"
-      size 0.3 0.3 2
-    }
-    Wall {
-      translation -9.77412 -12.1869 1.03
-      rotation 0 0 1 0.785398
-      name "wall(38)"
-      size 0.3 0.3 2
-    }
-    Wall {
-      translation -9.79533 -12.491 1.03
-      rotation 0 0 1 0.785398
-      name "wall(39)"
-      size 0.3 0.3 2
-    }
-    Wall {
-      translation -9.83068 -12.7665 1.03
-      rotation 0 0 1 0.785398
-      name "wall(40)"
-      size 0.3 0.3 2
-    }
-    Wall {
-      translation -5.51652 -3.58112 1.03
-      rotation 0 0 1 4.692820414042842e-06
-      name "wall(30)"
-      size 0.3 0.6 2
-    }
-    Wall {
-      translation -6.07652 -3.58112 1.03
-      rotation 0 0 1 4.692820414042842e-06
-      name "wall(34)"
-      size 0.3 0.6 2
-    }
-    Wall {
-      translation -6.98652 -3.58112 1.03
-      rotation 0 0 1 4.692820414042842e-06
-      name "wall(35)"
-      size 0.3 0.6 2
-    }
-    Wall {
-      translation -8.30652 -3.58112 1.03
-      rotation 0 0 1 4.692820414042842e-06
-      name "wall(36)"
-      size 0.3 0.6 2
-    }
-    Wall {
-      translation -8.30652 -2.43112 1.03
-      rotation 0 0 1 4.692820414042842e-06
-      name "wall(41)"
-      size 0.3 0.8 2
-    }
-    Wall {
-      translation -9.70652 -3.58112 1.03
-      rotation 0 0 1 4.692820414042842e-06
-      name "wall(37)"
-      size 0.6 0.6 2
-    }
-    Wall {
       translation -9.76 6.93 1.03
       name "wall(11)"
       size 10 0.3 2
@@ -2276,150 +1745,6 @@ Solid {
       translation -0.57 -8.32 1.03
       name "wall(3)"
       size 10 0.3 2
-    }
-    Wall {
-      translation -13.0348 -1.15811 1.03
-      rotation 0 0 -1 0.785396
-      name "wall(42)"
-      size 5 0.3 2
-    }
-    Wall {
-      translation -4.69815 2.90774 1.03
-      rotation 0 0 -1 -0.785395307179586
-      name "wall(52)"
-      size 0.5 0.3 2
-    }
-    Wall {
-      translation -4.11836 3.48753 1.03
-      rotation 0 0 -1 -0.785395307179586
-      name "wall(54)"
-      size 0.5 0.3 2
-    }
-    Wall {
-      translation -3.40421 4.20168 1.03
-      rotation 0 0 -1 -0.785395307179586
-      name "wall(55)"
-      size 0.5 0.3 2
-    }
-    Wall {
-      translation -2.59809 5.0078 1.03
-      rotation 0 0 -1 -0.785395307179586
-      name "wall(56)"
-      size 0.5 0.3 2
-    }
-    Wall {
-      translation -0.618261 -3.19147 1.03
-      rotation 0 0 1 1.57079
-      name "wall(60)"
-      size 0.5 0.5 2
-    }
-    Wall {
-      translation 0.29177 -3.72147 1.03
-      rotation 0 0 1 1.57079
-      name "wall(61)"
-      size 0.5 0.5 2
-    }
-    Wall {
-      translation -0.35823 -0.491481 1.03
-      rotation 0 0 1 1.57079
-      name "wall(62)"
-      size 0.5 0.5 2
-    }
-    Wall {
-      translation -0.77823 -1.00147 1.03
-      rotation 0 0 1 1.57079
-      name "wall(63)"
-      size 0.5 0.5 2
-    }
-    Wall {
-      translation 0.07177 -1.93147 1.03
-      rotation 0 0 1 1.57079
-      name "wall(65)"
-      size 0.5 0.5 2
-    }
-    Wall {
-      translation -1.00823 -2.23147 1.03
-      rotation 0 0 1 1.57079
-      name "wall(64)"
-      size 0.5 0.5 2
-    }
-    Wall {
-      translation -2.08905 5.51684 1.03
-      rotation 0 0 -1 -0.785395307179586
-      name "wall(57)"
-      size 0.5 0.3 2
-    }
-    Wall {
-      translation -1.5445 6.06135 1.03
-      rotation 0 0 -1 -0.785395307179586
-      name "wall(58)"
-      size 0.5 0.3 2
-    }
-    Wall {
-      translation -0.879791 6.72605 1.03
-      rotation 0 0 -1 -0.785395307179586
-      name "wall(59)"
-      size 0.5 0.3 2
-    }
-    Wall {
-      translation -11.577 6.08126 1.03
-      rotation 0 0 1 0.785401
-      name "wall(43)"
-      size 1 0.3 2
-    }
-    Wall {
-      translation -11.0819 5.58632 1.03
-      rotation 0 0 1 0.785401
-      name "wall(46)"
-      size 1 0.3 2
-    }
-    Wall {
-      translation -10.0922 5.57223 1.03
-      rotation 0 0 1 0.785401
-      name "wall(48)"
-      size 1 0.3 2
-    }
-    Wall {
-      translation -8.1903 6.48432 1.03
-      rotation 0 0 1 0.785401
-      name "wall(53)"
-      size 1.5 0.3 2
-    }
-    Wall {
-      translation -9.37099 5.89739 1.03
-      rotation 0 0 1 0.785401
-      name "wall(50)"
-      size 1 0.3 2
-    }
-    Wall {
-      translation -12.1497 6.555 1.03
-      rotation 0 0 1 -0.785395307179586
-      name "wall(44)"
-      size 1 0.3 2
-    }
-    Wall {
-      translation -11.9025 5.47321 1.03
-      rotation 0 0 1 -0.785395307179586
-      name "wall(45)"
-      size 1 0.3 2
-    }
-    Wall {
-      translation -10.7931 5.551 1.03
-      rotation 0 0 1 -0.785395307179586
-      name "wall(47)"
-      size 1 0.3 2
-    }
-    Wall {
-      translation -10.1144 5.87624 1.03
-      rotation 0 0 1 -0.785395307179586
-      name "wall(49)"
-      size 1 0.3 2
-    }
-    Wall {
-      translation -9.06791 5.90456 1.03
-      rotation 0 0 1 -0.785395307179586
-      name "wall(51)"
-      size 1 0.3 2
     }
     Wall {
       translation 12.19 -2.47 1.03
@@ -2486,12 +1811,6 @@ Solid {
       rotation 0 0 1 -1.5707953071795862
       name "wall(5)"
       size 10 0.3 2
-    }
-    Wall {
-      translation -5.17 6.79 1.03
-      rotation 0 0 1 -1.5707953071795862
-      name "wall(10)"
-      size 8 0.3 2
     }
     Wall {
       translation 9.42 10.96 1.03
