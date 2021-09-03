@@ -11,8 +11,8 @@ WorldInfo {
   ]
 }
 Viewpoint {
-  orientation -0.9863897020143421 0.0049319896100978745 -0.1643503308136108 0.060827378688758496
-  position -7.733377837948092 -5.615820963777334 66.93880109027343
+  orientation 0 1 0 0
+  position -7.420436777770439 -11.091387418237412 46.91347073942073
 }
 TexturedBackground {
 }
@@ -33,21 +33,16 @@ Solid {
   name "GOAL"
 }
 Robot {
-  translation -13.35 -15.82 0.0690518
+  translation -18.02 -15.78 0.0690507
   rotation -0.9785662911332222 4.0002311901086377e-07 0.2059320612668402 3.758520688427117e-06
   children [
     Lidar {
-      translation 0.0199997 0.0100008 0.31
+      translation -2.17659e-07 5.09803e-07 0.31
       rotation -0.5773509358554485 0.5773489358556708 0.5773509358554485 -2.094395307179586
       name "head_hokuyo_sensor"
-      horizontalResolution 256
-      numberOfLayers 6
-      near 0.05
-      minRange 0.05
-      maxRange 8
+      numberOfLayers 1
+      maxRange 16
       type "rotating"
-      noise 0.1
-      defaultFrequency 2
     }
     Solid {
       translation -0.0600001 2.07846e-07 0.31
@@ -607,6 +602,7 @@ Robot {
             }
             RotationalMotor {
               name "joint_right_wheel"
+              maxVelocity 20
             }
           ]
           endPoint Solid {
@@ -902,6 +898,7 @@ Robot {
             }
             RotationalMotor {
               name "joint_left_wheel"
+              maxVelocity 20
             }
           ]
           endPoint Solid {
@@ -1197,6 +1194,7 @@ Robot {
             }
             RotationalMotor {
               name "joint_left2_wheel"
+              maxVelocity 20
             }
           ]
           endPoint Solid {
@@ -1707,10 +1705,61 @@ RectangleArena {
   floorTileSize 1 1
   wallThickness 0.3
   wallHeight 2
+  wallAppearance PBRAppearance {
+    baseColorMap ImageTexture {
+      url [
+        "https://raw.githubusercontent.com/cyberbotics/webots/R2021b/projects/appearances/protos/textures/brushed_aluminium/brushed_aluminium_base_color.jpg"
+      ]
+    }
+    roughness 1
+    roughnessMap ImageTexture {
+      url [
+        "https://raw.githubusercontent.com/cyberbotics/webots/R2021b/projects/appearances/protos/textures/brushed_aluminium/brushed_aluminium_roughness.jpg"
+      ]
+    }
+    metalness 0
+    normalMap ImageTexture {
+      url [
+        "https://raw.githubusercontent.com/cyberbotics/webots/R2021b/projects/appearances/protos/textures/brushed_aluminium/brushed_aluminium_normal.jpg"
+      ]
+    }
+  }
 }
 Solid {
   translation 0 0 -0.08
   children [
+    Solid {
+      translation -15.99 -18.11 1.02996
+      rotation 1 0 0 1.5708
+      children [
+        Shape {
+          appearance PBRAppearance {
+            roughness 1
+            metalness 0
+          }
+          geometry Cylinder {
+            radius 0.8
+          }
+        }
+      ]
+      name "solid(2)"
+    }
+    Solid {
+      translation -5.56 -8.09 1.02996
+      rotation 1 0 0 1.5708
+      children [
+        Shape {
+          appearance PBRAppearance {
+            roughness 1
+            metalness 0
+          }
+          geometry Cylinder {
+            radius 0.4
+          }
+        }
+      ]
+      name "solid(1)"
+    }
     Solid {
       children [
         Shape {
@@ -1730,6 +1779,37 @@ Solid {
     Wall {
       translation -15.06 -12.87 1.03
       size 10 0.3 2
+    }
+    Wall {
+      translation -15.06 -13.17 1.03
+      name "wall(10)"
+      size 0.3 0.3 2
+    }
+    Wall {
+      translation -3.08 -18.99 1.03
+      name "wall(19)"
+      size 1.5 1.5 2
+    }
+    Wall {
+      translation -3.7 -12.99 1.03
+      name "wall(26)"
+      size 0.3 0.3 2
+    }
+    Wall {
+      translation -8.45 -3.39 1.03
+      name "wall(20)"
+      size 0.5 0.5 2
+    }
+    Wall {
+      translation -19.3652 -13.5134 1.03
+      rotation 0 0 1 0.785398
+      name "wall(23)"
+      size 2 0.3 2
+    }
+    Wall {
+      translation -19.79 -20.01 1.03
+      name "wall(22)"
+      size 0.3 0.3 2
     }
     Wall {
       translation -9.76 -3.02 1.03
