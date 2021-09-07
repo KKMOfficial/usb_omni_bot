@@ -72,6 +72,15 @@ sample_enable = 0;
 % used to show real trajectory of the bot
 real_x = [];
 real_y = [];
+% used to declare occupancy map has been created and localization started
+planning_mode = false;
+localization_mode = false;
+slam_mode = true;
+% localization algorithm variables
+odometryPose = [0 0 0];
+loc_counter = 0;
+% planning algorithm variables
+%occGrid
 
 % define algorithm states here
 
@@ -196,6 +205,11 @@ wb_lidar_enable(lidar, TIME_STEP);
 wb_lidar_enable_point_cloud(lidar);
 num_of_points = wb_lidar_get_number_of_points(lidar);
 
+
+% defien and enable noisy gps for odometry
+odometry = wb_robot_get_device('odometry');
+wb_gps_enable(odometry, TIME_STEP);
+
 % define and enable gps
 gps = wb_robot_get_device('gps');
 wb_gps_enable(gps, TIME_STEP);
@@ -266,6 +280,9 @@ while wb_robot_step(TIME_STEP) ~= -1
   %  rgb = wb_camera_get_image(camera);
   % read GPS values
   gps_values = wb_gps_get_values(gps);
+  
+  % read GPS values for odometry
+  odometry_values = wb_gps_get_values(odometry);
 
   % read compass and rotate arrow accordingly
   compass_val = wb_compass_get_values(compass);
@@ -572,7 +589,67 @@ while wb_robot_step(TIME_STEP) ~= -1
         robot_omega = [-3.0 -3.0 -3.0];
       elseif ch == 67 %'c'
         robot_omega = [3.0 3.0 3.0];
-      elseif ch == 84 %'t'
+      elseif ch == 76 %'l'  
+        localization_mode = true;     
+        fprintf('localization mode enabled successfully \n');
+      elseif ch == 80 %'p'
+        localization_mode = false;
+      
+        fprintf('planning mode enabled successfully \n');
+        show(occGrid)
+        
+        % Set the start and goal poses
+        start = robot_position(:,1:3);
+        goal = [1, 1, -pi];
+        
+        % Show the start and goal positions of the robot
+        hold on
+        plot(start(1), start(2), 'ro')
+        plot(goal(1), goal(2), 'mo')
+        
+        % Show the start and goal headings
+        r = 0.5;
+        plot([start(1), start(1) + r*cos(start(3))], [start(2), start(2) + r*sin(start(3))], 'r-' )
+        plot([goal(1), goal(1) + r*cos(goal(3))], [goal(2), goal(2) + r*sin(goal(3))], 'm-' )
+        hold off
+        
+        bounds = [occGrid.XWorldLimits; occGrid.YWorldLimits; [-pi pi]];
+
+        ss = stateSpaceDubins(bounds);
+        ss.MinTurningRadius = 0.4;
+        
+        
+        stateValidator = validatorOccupancyMap(ss); 
+        stateValidator.Map = occGrid;
+        stateValidator.ValidationDistance = 0.05;
+        
+        
+        planner = plannerRRT(ss, stateValidator);
+        planner.MaxConnectionDistance = 2.0;
+        planner.MaxIterations = 30000;
+        
+        planner.GoalReachedFcn = @exampleHelperCheckIfGoal;
+        
+        rng(0,'twister')
+
+        [pthObj, solnInfo] = plan(planner, start, goal);
+        
+        show(occGrid)
+        hold on
+        
+        % Search tree
+        plot(solnInfo.TreeData(:,1), solnInfo.TreeData(:,2), '.-');
+        
+        % Interpolate and plot path
+        interpolate(pthObj,300)
+        plot(pthObj.States(:,1), pthObj.States(:,2), 'r-', 'LineWidth', 2)
+        
+        % Show the start and goal in the grid map
+        plot(start(1), start(2), 'ro')
+        plot(goal(1), goal(2), 'mo')
+        hold off
+
+      elseif slam_mode & (ch == 84) %'t'
         robot_omega = [0.0 0.0 0.0];
         wb_motor_set_velocity(motor_1, 3*robot_omega(1));
         wb_motor_set_velocity(motor_2, 3*robot_omega(2));
@@ -604,23 +681,20 @@ while wb_robot_step(TIME_STEP) ~= -1
           if ~isScanAccepted
               continue;
           end
-          hold on;
+          
           % visualize the first detected loop closure, if you want to see the
           % complete map building process, remove the if condition below
           if optimizationInfo.IsPerformed && ~firstTimeLCDetected
-            show(slamAlg, 'Poses', 'off');
-            
-            show(slamAlg.PoseGraph);
-            if rem(i,10) == 0
-              show(slamObj);
-            end 
-
-            firstTimeLCDetected = true;
-            drawnow
+          show(slamAlg, 'Poses', 'off');
+          hold on;
+          show(slamAlg.PoseGraph); 
+          hold off;
+          firstTimeLCDetected = true;
+          drawnow
           end
         end
-        plot(real_x,real_y)
-        hold off;
+        % plot(real_x,real_y)
+        
         title('First loop closure');
         
         
@@ -636,22 +710,102 @@ while wb_robot_step(TIME_STEP) ~= -1
         hold off
         title('Occupancy Grid Map Built Using Lidar SLAM');
         
+        
+        % this variable is going to be used in path planning phase
+        occGrid = copy(map);
+        
         fprintf('finished \n');
         
         
+        %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+        fprintf('robot will move toward the goal. \n');
+        % enable particle filter to initiate localization phase
+        
+        % use odometryModel for differential drive
+        % odometryModel = odometryMotionModel;
+        % odometryModel.Noise = [0.2 0.2 0.2 0.2];
+        
+        odometryPose = [odometry_values(1) odometry_values(2) robot_position(3)];
+        
+        rangeFinderModel = likelihoodFieldSensorModel;
+        rangeFinderModel.SensorLimits = [0.01 16];
+        rangeFinderModel.Map = map;
+        
+        amcl = monteCarloLocalization;
+        amcl.UseLidarScan = true;
+        
+        amcl.SensorModel = rangeFinderModel;
+        
+        amcl.UpdateThresholds = [0.2,0.2,0.2];
+        amcl.ResamplingInterval = 1;
+        
+        amcl.ParticleLimits = [500 5000];
+        amcl.GlobalLocalization = false;
+        amcl.InitialPose = robot_position(:,1:3);
+        amcl.InitialCovariance = eye(3)*0.5;
+        
+        
+        visualizationHelper = ExampleHelperAMCLVisualization(map)
+        
+        % figure;
+        % drawnow;
+        % title('Localization');
+        
+        
+        % VFH = robotics.VectorFieldHistogram;
+        % VFH.DistanceLimits = [0 2];
+        % VFH.RobotRadius = 0.12;
+        % VFH.MinTurningRadius = 0.12;
+        % VFH.SafetyDistance = 0.05;
+        %% obj.vfh.HistogramThresholds= [3 10];
+        % TargetDir = 0;
+        
+        slam_mode = false;
+        localization_mode = false;
+        planning_mode = false;
+            
         %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%        
         
       else
         robot_omega = [0.0 0.0 0.0];
       end
       
-      if sample_enable == 20
+      if sample_enable == 20 & slam_mode
         scans = [scans convert_to_lidar_scan(lidar_points_set,robot_position(3))];
-        sample_enable = 0
-        real_x = [real_x robot_position(1)+18.02];
-        real_y = [real_y robot_position(2)+15.78];
-        fprintf('data stored');
+        real_x = [real_x robot_position(1)];
+        real_y = [real_y robot_position(2)];         
+        sample_enable = 0;
       end
+      
+      
+      if sample_enable == 20 & localization_mode
+        scans = convert_to_lidar_scan(lidar_points_set,robot_position(3));
+        real_x = robot_position(1);
+        real_y = robot_position(2);
+        sample_enable = 0;
+        
+        % update position with each movement and graph it
+        [isUpdated,estimatedPose,covariance] = amcl(odometryPose,scans);
+        
+        % update odometry position
+        odometryPose = estimatedPose;
+        
+        % Call VFH object to computer steering direction
+        % steerDir = VFH(scan, targetDir); 
+
+        
+        % figure; 
+        % hold on;
+        plotStep(visualizationHelper, amcl, estimatedPose, scans, loc_counter)
+        %plot(robot_position(1),robot_position(2),'r-o');
+        % hold off;
+        % drawnow;
+        % title('Localization');
+        
+        localization_mode = false;
+        loc_counter = loc_counter + 1;
+      end
+
       
     end
     
@@ -744,6 +898,13 @@ function result = exceeds_lower_limit(sonar_value,min_value)
   result = sonar_value < min_value;
 end
 
+function isReached = exampleHelperCheckIfGoal(planner, goalState, newState)
+  isReached = false;
+  threshold = 0.1;
+  if planner.StateSpace.distance(newState, goalState) < threshold
+      isReached = true;
+  end
+end
 
 function lidarScanVal = convert_to_lidar_scan(lidar_img_points,robot_theta)
   % class(lidar_img_points)
