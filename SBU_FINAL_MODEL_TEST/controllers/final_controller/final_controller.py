@@ -290,8 +290,8 @@ if __name__ == "__main__":
     
     
     # define position sensor variables
-    wheel_circum = 2 * math.pi * WHEEL_RADIUS
-    encoder_unit = wheel_circum/(2 * math.pi)
+    # wheel_circum = 2 * math.pi * WHEEL_RADIUS
+    # encoder_unit = wheel_circum/(2 * math.pi)
     
     
     # graphic panel defined here
@@ -301,10 +301,10 @@ if __name__ == "__main__":
     # display.drawPolygon(px,py)
     
     
-    Measurment_color = 'r'#0x44db09
-    Estimate_color = 'g'#0xd48750
-    Localization_color = 'b'#0x11f0a5
-    Reality_color = 'r'#0xd43343
+    # Measurment_color = 'r'#0x44db09
+    # Estimate_color = 'g'#0xd48750
+    # Localization_color = 'b'#0x11f0a5
+    # Reality_color = 'r'#0xd43343
     # text_width_allignment = int(display.getWidth()*0.05)
     # display.setFont("UbuntuMono-Regular",8,False)
     # display.setColor(Measurment_color)
@@ -342,11 +342,6 @@ if __name__ == "__main__":
     
 
     
-    plt.xlim(-40.0,40.0,1.0)
-    plt.ylim(-40.0,40.0,1.0)
-    plt.title('Extended Kalman Filter Plot')
-    plt.ion()
-    
     # Main loop:
     # - perform simulation steps until Webots is stopping the controller
     while robot.step(timestep) != -1:
@@ -366,8 +361,8 @@ if __name__ == "__main__":
         position_value = encoder_unit*np.array([pos_1.getValue(),pos_2.getValue(),pos_3.getValue()])
 
     
-        # Process sensor data here.             
-        
+        # Process sensor data here.   
+
         
         # updating the current theta
         robot_position[2] = math.atan2(compass_val[0], compass_val[1]);
@@ -574,10 +569,10 @@ if __name__ == "__main__":
         
         # update motor velocities
         # add noise to motor velocity
-        noise = np.random.normal(0, 0.15, size=(3, 1))
-        motor_1.setVelocity(robot_omega[0] + float(noise[0]))
-        motor_2.setVelocity(robot_omega[1] + float(noise[1]))
-        motor_3.setVelocity(robot_omega[2] + float(noise[2]))
+        # noise = np.random.normal(0, 0.15, size=(3, 1))
+        motor_1.setVelocity(robot_omega[0])
+        motor_2.setVelocity(robot_omega[1])
+        motor_3.setVelocity(robot_omega[2])
         
         
         
@@ -590,7 +585,7 @@ if __name__ == "__main__":
         # y_expansion = 5
         
         # estimate robot movement
-        estimate_displacement = WHEEL_RADIUS * kinematic(robot_position[2], robot_omega)
+        # estimate_displacement = WHEEL_RADIUS * kinematic(robot_position[2], robot_omega)
         
         
         # update the estimation position
@@ -600,11 +595,11 @@ if __name__ == "__main__":
         
         
         # measure robot movement
-        robot_phi_measure = position_value - robot_phi_measure
-        measure_phi = robot_phi_measure / WHEEL_RADIUS
-        estimate_displacement = WHEEL_RADIUS*kinematic(robot_position[2], measure_phi)
-        robot_pos_measure[0] += estimate_displacement[0]
-        robot_pos_measure[1] += estimate_displacement[1]
+        # robot_phi_measure = position_value - robot_phi_measure
+        # measure_phi = robot_phi_measure / WHEEL_RADIUS
+        # estimate_displacement = WHEEL_RADIUS*kinematic(robot_position[2], measure_phi)
+        # robot_pos_measure[0] += estimate_displacement[0]
+        # robot_pos_measure[1] += estimate_displacement[1]
         
         
         # update robot measurement 

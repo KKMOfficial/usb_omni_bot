@@ -588,7 +588,7 @@ while wb_robot_step(TIME_STEP) ~= -1
       elseif ch == 82 %'r'
         robot_omega = [-3.0 -3.0 -3.0];
       elseif ch == 67 %'c'
-        robot_omega = [3.0 3.0 3.0];
+        robot_omega = [3.0 3.0 3.0];     
       elseif ch == 76 %'l'  
         localization_mode = true;     
         fprintf('localization mode enabled successfully \n');
@@ -598,9 +598,14 @@ while wb_robot_step(TIME_STEP) ~= -1
         fprintf('planning mode enabled successfully \n');
         show(occGrid)
         
+        x_g = input('goal X = ');
+        y_g = input('goal Y = ');
+        
+        
+        
         % Set the start and goal poses
         start = robot_position(:,1:3);
-        goal = [1, 1, -pi];
+        goal = [x_g, y_g, 0];
         
         % Show the start and goal positions of the robot
         hold on
@@ -713,6 +718,7 @@ while wb_robot_step(TIME_STEP) ~= -1
         
         % this variable is going to be used in path planning phase
         occGrid = copy(map);
+
         
         fprintf('finished \n');
         
@@ -802,9 +808,9 @@ while wb_robot_step(TIME_STEP) ~= -1
         % drawnow;
         % title('Localization');
         
-        localization_mode = false;
         loc_counter = loc_counter + 1;
       end
+      
 
       
     end
@@ -911,7 +917,7 @@ function lidarScanVal = convert_to_lidar_scan(lidar_img_points,robot_theta)
   % numel(lidar_img_points)
   % lidar_img_points
   % pause(300)
-  refAngles  = double(linspace(robot_theta-pi,robot_theta+pi,numel(lidar_img_points)));
+  refAngles  = double(linspace(0,-2*pi,numel(lidar_img_points)));
   refRanges  = double(lidar_img_points);
   lidarScanVal = lidarScan(refRanges,refAngles);
 end

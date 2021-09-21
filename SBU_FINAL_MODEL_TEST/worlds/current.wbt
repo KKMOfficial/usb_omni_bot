@@ -12,41 +12,15 @@ WorldInfo {
 }
 Viewpoint {
   orientation 0 1 0 0
-  position -1.0292828949811605 0.07506663756060128 41.70746480933922
+  position 8.604924292006285 6.7279362922671355 44.41804671222217
 }
 TexturedBackground {
 }
 TexturedBackgroundLight {
   castShadows FALSE
 }
-Solid {
-  translation 8.53 7.97 0.020028
-  rotation 1 0 0 1.5708
-  children [
-    Shape {
-      geometry Cylinder {
-        height 0.1
-        radius 0.5
-      }
-    }
-  ]
-  name "GOAL"
-}
-Solid {
-  translation -4.51 -5.54 -0.010016
-  rotation 1 0 0 1.5708
-  children [
-    Shape {
-      geometry Cylinder {
-        height 0.1
-        radius 0.5
-      }
-    }
-  ]
-  name "GOAL(1)"
-}
 Robot {
-  translation -4.48 -5.54 0.0690123
+  translation 0 0 0.0690901
   rotation -0.9785662911332222 4.0002311901086377e-07 0.2059320612668402 3.758520688427117e-06
   children [
     GPS {
@@ -63,9 +37,9 @@ Robot {
       type "rotating"
     }
     Solid {
-      translation -0.0600001 2.07846e-07 0.31
-      rotation 0.5773509358554485 0.5773489358556708 0.5773509358554485 2.0944
-      scale 0.003 0.003 0.003
+      translation 0.09 1.89804e-07 0.24
+      rotation -3.3977899999752476e-06 1.73923999998733e-06 -0.9999999999927152 -1.5707953071795862
+      scale 0.002 0.002 0.002
       children [
         Shape {
           appearance PBRAppearance {
@@ -75,7 +49,7 @@ Robot {
           }
           geometry Mesh {
             url [
-              "robot_parts/Garmin_Lidar_Lite_3.stl"
+              "robot_parts/hokuyo_utm30lx.stl"
             ]
           }
         }
@@ -537,7 +511,7 @@ Robot {
       name "L298(1)"
     }
     Solid {
-      translation 0.130001 -0.0519605 0.23
+      translation 0.133661 -0.0383002 0.23
       rotation -1.18107e-06 -7.26879e-07 1 -2.6179953071795863
       scale 0.002 0.002 0.002
       children [
@@ -1719,7 +1693,7 @@ Robot {
 }
 RectangleArena {
   rotation 1 0 0 1.5708
-  floorSize 20 20
+  floorSize 50 50
   floorTileSize 1 1
   wallThickness 0.3
   wallHeight 2
@@ -1744,8 +1718,66 @@ RectangleArena {
   }
 }
 Solid {
-  translation 0 0 -0.08
+  translation 7.58 7.31 -0.08
   children [
+    Solid {
+      translation 8.53 7.97 0.060028
+      rotation 1 0 0 1.5708
+      children [
+        Shape {
+          geometry Cylinder {
+            height 0.1
+            radius 0.5
+          }
+        }
+      ]
+      name "GOAL"
+    }
+    Solid {
+      translation -7.62 -7.35 0.0899569
+      rotation 1 0 0 1.5708
+      children [
+        Shape {
+          geometry Cylinder {
+            height 0.1
+            radius 0.5
+          }
+        }
+      ]
+      name "START"
+    }
+    Solid {
+      translation 9.68 2.94 0.309945
+      rotation 1 0 0 1.5708
+      children [
+        Shape {
+          appearance PBRAppearance {
+            roughness 1
+            metalness 0
+          }
+          geometry Box {
+            size 0.5 0.5 0.5
+          }
+        }
+      ]
+      name "solid(21)"
+    }
+    Solid {
+      translation 9.68 -0.39 0.309944
+      rotation 1 0 0 1.5708
+      children [
+        Shape {
+          appearance PBRAppearance {
+            roughness 1
+            metalness 0
+          }
+          geometry Box {
+            size 0.5 0.5 0.5
+          }
+        }
+      ]
+      name "solid(20)"
+    }
     Solid {
       translation 6.72 -6.97 1.02996
       rotation 1 0 0 1.5708
@@ -1843,6 +1875,70 @@ Solid {
       name "solid(4)"
     }
     Solid {
+      translation -10.24 -0.07 0.559951
+      rotation 1 0 0 1.5708
+      children [
+        Shape {
+          appearance PBRAppearance {
+            roughness 1
+            metalness 0
+          }
+          geometry Box {
+            size 0.5 4 20
+          }
+        }
+      ]
+      name "solid(22)"
+    }
+    Solid {
+      translation 10.11 0.07 0.559951
+      rotation 1 0 0 1.5708
+      children [
+        Shape {
+          appearance PBRAppearance {
+            roughness 1
+            metalness 0
+          }
+          geometry Box {
+            size 0.5 4 20
+          }
+        }
+      ]
+      name "solid(23)"
+    }
+    Solid {
+      translation -0.05001 10.17 0.560007
+      rotation 0.5773509358554485 0.5773489358556708 0.5773509358554485 2.0944
+      children [
+        Shape {
+          appearance PBRAppearance {
+            roughness 1
+            metalness 0
+          }
+          geometry Box {
+            size 0.5 4 21
+          }
+        }
+      ]
+      name "solid(24)"
+    }
+    Solid {
+      translation -0.0499755 -10.19 0.559905
+      rotation 0.5773509358554485 0.5773489358556708 0.5773509358554485 2.0944
+      children [
+        Shape {
+          appearance PBRAppearance {
+            roughness 1
+            metalness 0
+          }
+          geometry Box {
+            size 0.5 4 21
+          }
+        }
+      ]
+      name "solid(25)"
+    }
+    Solid {
       translation 4.29 1.76 0.559958
       rotation 1 0 0 1.5708
       children [
@@ -1907,22 +2003,6 @@ Solid {
       name "solid(15)"
     }
     Solid {
-      translation -0.1 -2.66 0.559949
-      rotation 1 0 0 1.5708
-      children [
-        Shape {
-          appearance PBRAppearance {
-            roughness 1
-            metalness 0
-          }
-          geometry Box {
-            size 1 1 1
-          }
-        }
-      ]
-      name "solid(16)"
-    }
-    Solid {
       translation 5.31 -2.66 0.559949
       rotation 1 0 0 1.5708
       children [
@@ -1955,7 +2035,7 @@ Solid {
       name "solid(12)"
     }
     Solid {
-      translation 0.85 -1.64 0.559954
+      translation 0.85 -1.71 0.559954
       rotation 1 0 0 1.5708
       children [
         Shape {
@@ -2038,7 +2118,7 @@ Solid {
   name "MAZE"
 }
 Solid {
-  translation 9.68 -0.39 0.309944
+  translation 7.41 4.64 0.559962
   rotation 1 0 0 1.5708
   children [
     Shape {
@@ -2047,25 +2127,133 @@ Solid {
         metalness 0
       }
       geometry Box {
-        size 0.5 0.5 0.5
+        size 1 1 1
       }
     }
   ]
-  name "solid(8)"
+  name "solid(16)"
 }
 Solid {
-  translation 9.68 2.94 0.309945
-  rotation 1 0 0 1.5708
+  translation -12.82 -13.05 -0.08
   children [
-    Shape {
-      appearance PBRAppearance {
-        roughness 1
-        metalness 0
-      }
-      geometry Box {
-        size 0.5 0.5 0.5
-      }
+    Solid {
+      translation -10.24 -0.07 0.559951
+      rotation 1 0 0 1.5708
+      children [
+        Shape {
+          appearance PBRAppearance {
+            roughness 1
+            metalness 0
+          }
+          geometry Box {
+            size 0.5 4 20
+          }
+        }
+      ]
+      name "solid(22)"
+    }
+    Solid {
+      translation 10.11 0.07 0.559951
+      rotation 1 0 0 1.5708
+      children [
+        Shape {
+          appearance PBRAppearance {
+            roughness 1
+            metalness 0
+          }
+          geometry Box {
+            size 0.5 4 20
+          }
+        }
+      ]
+      name "solid(23)"
+    }
+    Solid {
+      translation -0.05001 10.17 0.560007
+      rotation 0.5773509358554485 0.5773489358556708 0.5773509358554485 2.0944
+      children [
+        Shape {
+          appearance PBRAppearance {
+            roughness 1
+            metalness 0
+          }
+          geometry Box {
+            size 0.5 4 21
+          }
+        }
+      ]
+      name "solid(24)"
+    }
+    Solid {
+      translation -0.0499755 -10.19 0.559905
+      rotation 0.5773509358554485 0.5773489358556708 0.5773509358554485 2.0944
+      children [
+        Shape {
+          appearance PBRAppearance {
+            roughness 1
+            metalness 0
+          }
+          geometry Box {
+            size 0.5 4 21
+          }
+        }
+      ]
+      name "solid(25)"
+    }
+    Solid {
+      children [
+        Shape {
+          appearance PBRAppearance {
+            baseColor 0 0 0.176471
+            roughness 1
+            metalness 0
+          }
+          geometry Box {
+            size 20 20 0.2
+          }
+        }
+      ]
+      name "ground"
+      contactMaterial "ground_asphalt"
     }
   ]
-  name "solid(1)"
+  name "MAZE(1)"
+}
+Wall {
+  translation -13.7994 -17.6321 0.95
+  rotation 0 0 1 1.5708
+  name "wall(3)"
+  size 1 0.25 3
+}
+Wall {
+  translation -14.4494 -17.6321 0.95
+  rotation 0 0 1 1.5708
+  name "wall(4)"
+  size 1 0.25 3
+}
+Wall {
+  translation -15.1094 -17.6321 0.95
+  rotation 0 0 1 1.5708
+  name "wall(5)"
+  size 1 0.25 3
+}
+Wall {
+  translation -15.7894 -17.6321 0.95
+  rotation 0 0 1 1.5708
+  name "wall(6)"
+  size 1 0.25 3
+}
+Wall {
+  translation -18.84 -17.33 0.95
+  size 8 0.25 3
+}
+Wall {
+  translation -13.47 -17.33 0.95
+  name "wall(1)"
+  size 8 0.25 3
+}
+Wall {
+  translation -13.47 -17.33 0.95
+  name "wall(2)"
+  size 1 0.25 3
 }
