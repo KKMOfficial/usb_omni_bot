@@ -186,6 +186,23 @@ wb_distance_sensor_enable(sonar_1, TIME_STEP);
 wb_distance_sensor_enable(sonar_2, TIME_STEP);
 wb_distance_sensor_enable(sonar_3, TIME_STEP);
 
+% define IR sensors
+ir_1 = wb_robot_get_device('distance_sensor1');
+ir_2 = wb_robot_get_device('distance_sensor2');
+ir_3 = wb_robot_get_device('distance_sensor3');
+ir_4 = wb_robot_get_device('distance_sensor4');
+ir_5 = wb_robot_get_device('distance_sensor5');
+ir_6 = wb_robot_get_device('distance_sensor6');
+
+% enable IR sensors
+wb_distance_sensor_enable(ir_1, TIME_STEP);
+wb_distance_sensor_enable(ir_2, TIME_STEP);
+wb_distance_sensor_enable(ir_3, TIME_STEP);
+wb_distance_sensor_enable(ir_4, TIME_STEP);
+wb_distance_sensor_enable(ir_5, TIME_STEP);
+wb_distance_sensor_enable(ir_6, TIME_STEP);
+
+
 % define position sensors
 pos_1 = wb_robot_get_device('joint_right_wheel_sensor');
 pos_2 = wb_robot_get_device('joint_left_wheel_sensor');
@@ -290,6 +307,14 @@ while wb_robot_step(TIME_STEP) ~= -1
   % read sonar sensors values
   sonar_value = [wb_distance_sensor_get_value(sonar_1) wb_distance_sensor_get_value(sonar_2) wb_distance_sensor_get_value(sonar_3)];
   
+  % read ir sensors values
+  ir_value = [wb_distance_sensor_get_value(ir_1) ... 
+              wb_distance_sensor_get_value(ir_2) ... 
+              wb_distance_sensor_get_value(ir_3) ... 
+              wb_distance_sensor_get_value(ir_4) ... 
+              wb_distance_sensor_get_value(ir_5) ... 
+              wb_distance_sensor_get_value(ir_6)];
+  
   % read position sensors values
   position_value = encoder_unit*[wb_position_sensor_get_value(pos_1),wb_position_sensor_get_value(pos_2),wb_position_sensor_get_value(pos_3)];
 
@@ -303,260 +328,8 @@ while wb_robot_step(TIME_STEP) ~= -1
   % updating lidar scan data 
   lidar_points_set = wb_lidar_get_range_image(lidar);
   
-  
-  % if is_first_scan
-    % prevScan = convert_to_lidar_scan(lidar_points_set,robot_position(3));
-    % is_first_scan = false;
-  % else
-    % currScan = convert_to_lidar_scan(lidar_points_set,robot_position(3));
-    % Estimate relative pose between current scan and previous scan
-    % [relPose,stats] = matchScansGrid(currScan,prevScan,'MaxRange',maxLidarRange,'Resolution',mapResolution);
-        
-    % Refine the relative pose
-    % relPoseRefined = matchScans(currScan,prevScan,'initialPose',relPose);
-    % Add relative pose to the pose graph object
-    % pGraph.addRelativePose(relPoseRefined,infoMat);
-    % ax = show(pGraph,'IDs','off');
-    % title(ax,'Estimated Robot Trajectory')
-    
-    % [loopClosureEdgeIds,loopClosurePoses] = helperDetectLoop(lidar_points_set,pGraph,loopClosureSearchRadius,loopClosureThreshold);
-    % Add loop closure edges to pose graph
-    % if ~isempty(loopClosureEdgeIds)
-        % for k = 1:size(loopClosureEdgeIds,1)
-            % pGraph.addRelativePose(loopClosurePoses(k,:),infoMat,loopClosureEdgeIds(k,1),loopClosureEdgeIds(k,2));
-        % end
-    % end
-    % Optimize pose graph
-    % updatedPGraph = optimizePoseGraph(pGraph);
-    
-    
-    % drawnow
-    % prevScan = currScan;
-  % end
-        
-
-  % Process here sensor data, images, etc.
-
-  % send actuator commands, e.g.:
-  %  wb_motor_set_postion(motor, 10.0);
-
-  
-  
-  
   if(wall_following_mode)
-  
-    % states here
-    if (robot_state == START)
-    %%%%%%%%%%%%%%%%%%
-      % print("START")
-      m_line_angle = calc_m_line(robot_position,goal_postition);
-      m_line_point_1 = [goal_postition(1) goal_postition(2)];
-      m_line_point_2 = [robot_position(1) robot_position(2)];
-      % wall following sensor is the main sensor
-      wall_following_sensor = 3;
-      if abs(m_line_angle - robot_position(3)) > pi
-          robot_omega = [1.0 1.0 1.0];
-      else
-          robot_omega = [-1.0 -1.0 -1.0];
-      end
-      robot_state = ROTATE_ROBOT_HEAD_TOWARD_GOAL;
-    %%%%%%%%%%%%%%%%%%
-    elseif (robot_state == ROTATE_ROBOT_HEAD_TOWARD_GOAL)
-    %%%%%%%%%%%%%%%%%%
-      % print("ROTATE_ROBOT_HEAD_TOWARD_GOAL")
-      if abs(m_line_angle - robot_position(3)) < angle_threshold
-          robot_omega = [0.0 0.0 0.0];
-          robot_state = MOVE_TOWARD_T_ALONG_M_LINE;
-      end          
-    %%%%%%%%%%%%%%%%%%
-    elseif (robot_state == MOVE_TOWARD_T_ALONG_M_LINE)
-    %%%%%%%%%%%%%%%%%%
-      % print("MOVE_TOWARD_T_ALONG_M_LINE")
-      if  finished(step_timer)
-        robot_omega = [0.0 0.0 0.0];
-        step_timer = step_timer_reset_value;
-        robot_state = SCAN_ENVIRONMENT;
-      else
-        robot_omega = forward_sensor_direction(wall_following_sensor,1:3);
-        step_timer = reduce(step_timer);
-      end
-    %%%%%%%%%%%%%%%%%%
-    elseif (robot_state == SCAN_ENVIRONMENT)
-    %%%%%%%%%%%%%%%%%%
-      % print("SCAN_ENVIRONMENT")
-      if scan_timer == store_pose2
-        init_pose2 = robot_position(3);
-        scan_timer = reduce(scan_timer);
-      elseif scan_timer == scan_left_side
-        if abs(init_pose2 - robot_position(3)) < robot_scan_angle 
-          robot_omega = [-1.0 -1.0 -1.0];
-          % read sensors here
-          if is_in_range(sonar_value(wall_following_sensor),hit_threshold_min,hit_threshold_max)
-            scan_timer = scan_timer_reset_value;
-            wall_following_sensor = wall_following_sensor;
-            robot_state = FOLLOW_BOUNDRAY;
-          elseif is_in_range(sonar_value(right_sonar(wall_following_sensor)),hit_threshold_min,hit_threshold_max)
-            scan_timer = scan_timer_reset_value;
-            wall_following_sensor = right_sonar(wall_following_sensor);
-            robot_state = FOLLOW_BOUNDRAY;
-          end    
-        else
-          robot_omega = [0.0 0.0 0.0];
-          scan_timer = reduce(scan_timer);
-        end
-      elseif scan_timer == reset_head_dir
-        if abs(init_pose2 - robot_position(3)) > angle_threshold
-          robot_omega = [1.0 1.0 1.0];
-        else
-          robot_omega = [0.0 0.0 0.0];
-          scan_timer = reduce(scan_timer);
-         end    
-      elseif scan_timer == scan_right_side
-        if abs(init_pose2 - robot_position(3)) < robot_scan_angle
-          robot_omega = [1.0,1.0,1.0];
-          % read sensors here
-          if is_in_range(sonar_value(wall_following_sensor),hit_threshold_min,hit_threshold_max)
-            scan_timer = scan_timer_reset_value;
-            wall_following_sensor = wall_following_sensor;
-            robot_state = FOLLOW_BOUNDRAY;
-          elseif is_in_range(sonar_value(right_sonar(wall_following_sensor)),hit_threshold_min,hit_threshold_max)
-            scan_timer = scan_timer_reset_value;
-            wall_following_sensor = right_sonar(wall_following_sensor);
-            robot_state = FOLLOW_BOUNDRAY;
-          end    
-        else
-          robot_omega = [0.0 0.0 0.0];
-          scan_timer = reduce(scan_timer);
-        end
-      elseif finished(scan_timer)
-        if abs(init_pose2 - robot_position(3)) > angle_threshold
-          robot_omega = [-1.0 -1.0 -1.0];
-        else
-          robot_omega = [0.0 0.0 0.0];
-          scan_timer = scan_timer_reset_value;
-          robot_state = MOVE_TOWARD_T_ALONG_M_LINE;
-        end
-      end
-    %%%%%%%%%%%%%%%%%%
-    elseif (robot_state == FOLLOW_BOUNDRAY)
-    %%%%%%%%%%%%%%%%%%
-      if finished(follow_wall_timer)
-        %wb_console_print('finished', WB_STDOUT);
-        follow_wall_timer = follow_wall_timer_reset_value;
-        robot_state = EDGE_DETECTION;
-        scan_timer = scan_timer_reset_value;
-        circular_move_timer = circular_move_timer_reset_value;
-        % one_step_estimated_displacement = np.sum(curr_accumulated_estimated_displacement)
-        % print("ONE : ",one_step_estimated_displacement)
-        % print("left: ",left_move_counter)
-        % print("right: ",right_move_counter)
-        % print("------------")
-        [left_move_counter,right_move_counter] = deal(0,0);
-        % curr_accumulated_estimated_displacement = 0.0
-          
-      else
-        follow_wall_timer = reduce(follow_wall_timer);
-        if (abs(left_move_counter + right_move_counter -follow_wall_timer_reset_value) < bot_stop_threshold)
-          %wb_console_print('circular move', WB_STDOUT);
-          if(circular_move_timer > 3000)
-            follow_wall_timer = follow_wall_timer + 1;
-            circular_move_timer = reduce(circular_move_timer);
-            robot_omega = -0.4*forward_sensor_direction(wall_following_sensor,1:3);
-          elseif(circular_move_timer <= 3000) & (circular_move_timer > 1)
-            follow_wall_timer = follow_wall_timer + 1;
-            circular_move_timer = reduce(circular_move_timer);
-            robot_omega = circular_movement_counter_clockwise(wall_following_sensor,1:3);
-            % prevend hitting the wall
-            if is_in_range(sonar_value(right_sonar(wall_following_sensor)),hit_threshold_min,hit_threshold_max)
-                robot_omega = [0.0 0.0 0.0];
-                circular_move_timer = 1;
-            end    
-          elseif(circular_move_timer == 1)
-            circular_move_timer = circular_move_timer_reset_value;
-            wall_following_sensor = right_sonar(wall_following_sensor);
-            [left_move_counter,right_move_counter] = deal(0,0);
-            follow_wall_timer = follow_wall_timer_reset_value;
-            scan_timer = scan_timer_reset_value;
-            circular_move_timer = circular_move_timer_reset_value;
-            step_timer = step_timer_reset_value;
-          end    
-        elseif exceeds_upper_limit(sonar_value(wall_following_sensor),hit_threshold_max)
-          %wb_console_print('getting away', WB_STDOUT);
-          robot_omega = 2*rotational_movement_counter_clockwise(wall_following_sensor,1:3);
-          left_move_counter = left_move_counter + 1;
-        elseif exceeds_lower_limit(sonar_value(wall_following_sensor),hit_threshold_min)
-          %wb_console_print('getting near', WB_STDOUT);
-          robot_omega = 2*rotational_movement_clockwise(wall_following_sensor,1:3);
-          right_move_counter = right_move_counter + 1;
-        else
-          % robot_omega = forward_sensor_direction[wall_following_sensor]
-          %wb_console_print('parallel move', WB_STDOUT);     
-          robot_omega = 0.5*parallel_move(right_motor(wall_following_sensor),1:3) + 0.5*forward_sensor_direction(wall_following_sensor,1:3);
-        end
-      end       
-    %%%%%%%%%%%%%%%%%%              
-    elseif (robot_state == EDGE_DETECTION)
-    %%%%%%%%%%%%%%%%%%
-      % print("SCAN_ENVIRONMENT")
-      if scan_timer == store_pose2
-        init_pose2 = robot_position(3);
-        scan_timer = reduce(scan_timer);
-      elseif scan_timer == scan_left_side
-        if abs(init_pose2 - robot_position(3)) < robot_scan_angle
-          robot_omega = [-1.0 -1.0 -1.0];
-          % read sensors here
-          if is_in_range(sonar_value(right_sonar(wall_following_sensor)),hit_threshold_min,hit_threshold_max)
-              scan_timer = scan_timer_reset_value;
-              wall_following_sensor = right_sonar(wall_following_sensor);
-              robot_state = FOLLOW_BOUNDRAY;
-          end    
-        else
-          robot_omega = [0.0 0.0 0.0];
-          scan_timer = reduce(scan_timer);
-        end    
-      elseif scan_timer == reset_head_dir
-        if abs(init_pose2 - robot_position(3)) > angle_threshold
-          robot_omega = [1.0 1.0 1.0];
-        else
-          robot_omega = [0.0 0.0 0.0];
-          scan_timer = reduce(scan_timer);
-        end    
-      elseif scan_timer == scan_right_side
-        if abs(init_pose2 - robot_position(3)) < robot_scan_angle
-          robot_omega = [1.0 1.0 1.0];
-          % read sensors here
-          if is_in_range(sonar_value(right_sonar(wall_following_sensor)),hit_threshold_min,hit_threshold_max)
-              scan_timer = scan_timer_reset_value;
-              wall_following_sensor = right_sonar(wall_following_sensor);
-              robot_state = FOLLOW_BOUNDRAY;
-          end    
-        else
-          robot_omega = [0.0 0.0 0.0];
-          scan_timer = reduce(scan_timer);
-        end    
-      elseif finished(scan_timer)
-        if abs(init_pose2 - robot_position(3)) > angle_threshold
-          robot_omega = [-1.0 -1.0 -1.0];
-        else
-          robot_omega = [0.0 0.0 0.0];
-          scan_timer = scan_timer_reset_value;
-          robot_state = FOLLOW_BOUNDRAY;
-          follow_wall_timer = follow_wall_timer_reset_value;
-        end
-      end        
-    end
-    %%%%%%%%%%%%%%%%%%                    
-    % elseif (robot_state == SWAP_FOLLOWING_WALL):
-    %%%%%%%%%%%%%%%%%%
-        % robot_omega = [0.0 0.0 0.0])
-    %%%%%%%%%%%%%%%%%%
-    %elseif (robot_state == SWAP_ACTIVE_SONAR):
-  
-    %elseif (robot_state == STOP):
-  
-    % elseif (robot_state == TEST):
-        % robot_omega = [0 0 0]
-        
+
         
     % update motor velocities
     % add noise to motor velocity

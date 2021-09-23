@@ -11,8 +11,8 @@ WorldInfo {
   ]
 }
 Viewpoint {
-  orientation 0.00942424597046686 -0.009999389249652442 -0.9999055934449621 1.630094245337729
-  position -0.21835499400658334 -0.18944627542097978 15.454956759106654
+  orientation 0 1 0 0
+  position -11.684917292940138 -15.92597243009072 49.19740151022538
 }
 TexturedBackground {
 }
@@ -20,8 +20,8 @@ TexturedBackgroundLight {
   castShadows FALSE
 }
 Robot {
-  translation 0 0 0.0690901
-  rotation -0.9785662911332222 4.0002311901086377e-07 0.2059320612668402 3.758520688427117e-06
+  translation -20.3358 -21.0341 -0.00219636
+  rotation 0.9984228844617506 -6.02006930335304e-07 -0.05614039350339132 -5.307179586466759e-06
   children [
     GPS {
       name "odometry"
@@ -350,135 +350,195 @@ Robot {
     }
     Solid {
       translation 0.42062 0.115004 0.05
-      rotation -0.37796500919324305 0.6546520159231012 0.6546550159231742 -2.418865307179586
-      scale 0.0015 0.0015 0.0015
+      rotation 0.37796500919324305 -0.6546520159231012 -0.6546550159231742 2.418865307179586
       children [
+        Solid {
+          scale 0.0015 0.0015 0.0015
+          children [
+            Shape {
+              appearance PBRAppearance {
+                roughness 1
+              }
+              geometry Mesh {
+                url [
+                  "robot_parts/IRsensors_1649241787.stl"
+                ]
+              }
+            }
+          ]
+        }
         DistanceSensor {
-          rotation 0 1 0 3.14159
+          translation -0.03 0 0
+          rotation 2.1786e-07 -1 1.4821e-09 -3.1415853071795863
+          name "distance_sensor3"
+          lookupTable [
+            0.02 0 0
+            0.3 1000 0
+          ]
           type "infra-red"
         }
-        Shape {
-          appearance PBRAppearance {
-            roughness 1
-          }
-          geometry Mesh {
-            url [
-              "robot_parts/IRsensors_1649241787.stl"
-            ]
-          }
-        }
       ]
-      name "IRP_Sensor"
+      name "IRP_Sensor_3"
     }
     Solid {
       translation -0.116305 0.425004 0.05
       rotation -0.37796500919324305 0.6546520159231012 0.6546550159231742 -2.418865307179586
-      scale 0.0015 0.0015 0.0015
       children [
+        Solid {
+          scale 0.0015 0.0015 0.0015
+          children [
+            Shape {
+              appearance PBRAppearance {
+                roughness 1
+              }
+              geometry Mesh {
+                url [
+                  "robot_parts/IRsensors_1649241787.stl"
+                ]
+              }
+            }
+          ]
+        }
         DistanceSensor {
+          translation -0.03 0 0
           rotation 0 1 0 3.14159
+          name "distance_sensor6"
+          lookupTable [
+            0.02 0 0
+            0.3 1000 0
+          ]
           type "infra-red"
         }
-        Shape {
-          appearance PBRAppearance {
-            roughness 1
-          }
-          geometry Mesh {
-            url [
-              "robot_parts/IRsensors_1649241787.stl"
-            ]
-          }
-        }
       ]
-      name "IRP_Sensor(3)"
+      name "IRP_Sensor_6"
     }
     Solid {
       translation -0.315585 0.314484 0.0499982
       rotation -0.9999999999936517 3.5440199999775015e-06 3.694309999976548e-07 -1.5708053071795867
-      scale 0.0015 0.0015 0.0015
       children [
+        Solid {
+          scale 0.0015 0.0015 0.0015
+          children [
+            Shape {
+              appearance PBRAppearance {
+                roughness 1
+              }
+              geometry Mesh {
+                url [
+                  "robot_parts/IRsensors_1649241787.stl"
+                ]
+              }
+            }
+          ]
+        }
         DistanceSensor {
+          translation -0.03 0 0
           rotation 0 1 0 3.14159
+          name "distance_sensor1"
+          lookupTable [
+            0.02 0 0
+            0.3 1000 0
+          ]
           type "infra-red"
         }
-        Shape {
-          appearance PBRAppearance {
-            roughness 1
-          }
-          geometry Mesh {
-            url [
-              "robot_parts/IRsensors_1649241787.stl"
-            ]
-          }
-        }
       ]
-      name "IRP_Sensor(4)"
+      name "IRP_Sensor_1"
     }
     Solid {
       translation -0.315585 -0.305516 0.049992
       rotation -0.9999999999936517 3.5440199999775015e-06 3.694309999976548e-07 -1.5708053071795867
-      scale 0.0015 0.0015 0.0015
       children [
+        Solid {
+          scale 0.0015 0.0015 0.0015
+          children [
+            Shape {
+              appearance PBRAppearance {
+                roughness 1
+              }
+              geometry Mesh {
+                url [
+                  "robot_parts/IRsensors_1649241787.stl"
+                ]
+              }
+            }
+          ]
+        }
         DistanceSensor {
+          translation -0.03 0 0
           rotation 0 1 0 3.14159
+          name "distance_sensor4"
+          lookupTable [
+            0.02 0 0
+            0.3 1000 0
+          ]
           type "infra-red"
         }
-        Shape {
-          appearance PBRAppearance {
-            roughness 1
-          }
-          geometry Mesh {
-            url [
-              "robot_parts/IRsensors_1649241787.stl"
-            ]
-          }
-        }
       ]
-      name "IRP_Sensor(5)"
+      name "IRP_Sensor_4"
     }
     Solid {
       translation 0.4232 -0.1232 0.049998
       rotation 0.37796586633371787 0.6546507684850879 0.6546557684833196 2.41886
-      scale 0.0015 0.0015 0.0015
       children [
+        Solid {
+          scale 0.0015 0.0015 0.0015
+          children [
+            Shape {
+              appearance PBRAppearance {
+                roughness 1
+              }
+              geometry Mesh {
+                url [
+                  "robot_parts/IRsensors_1649241787.stl"
+                ]
+              }
+            }
+          ]
+        }
         DistanceSensor {
+          translation -0.03 0 0
           rotation 0 -1 0 -3.1415853071795863
+          name "distance_sensor5"
+          lookupTable [
+            0.02 0 0
+            0.3 1000 0
+          ]
           type "infra-red"
         }
-        Shape {
-          appearance PBRAppearance {
-            roughness 1
-          }
-          geometry Mesh {
-            url [
-              "robot_parts/IRsensors_1649241787.stl"
-            ]
-          }
-        }
       ]
-      name "IRP_Sensor(1)"
+      name "IRP_Sensor_5"
     }
     Solid {
       translation -0.113727 -0.4332 0.049998
       rotation 0.37796586633371787 0.6546507684850879 0.6546557684833196 2.41886
-      scale 0.0015 0.0015 0.0015
       children [
+        Solid {
+          scale 0.0015 0.0015 0.0015
+          children [
+            Shape {
+              appearance PBRAppearance {
+                roughness 1
+              }
+              geometry Mesh {
+                url [
+                  "robot_parts/IRsensors_1649241787.stl"
+                ]
+              }
+            }
+          ]
+        }
         DistanceSensor {
+          translation -0.03 0 0
           rotation 0 1 0 3.14159
+          name "distance_sensor2"
+          lookupTable [
+            0.02 0 0
+            0.3 1000 0
+          ]
           type "infra-red"
         }
-        Shape {
-          appearance PBRAppearance {
-            roughness 1
-          }
-          geometry Mesh {
-            url [
-              "robot_parts/IRsensors_1649241787.stl"
-            ]
-          }
-        }
       ]
-      name "IRP_Sensor(2)"
+      name "IRP_Sensor_2"
     }
     Solid {
       translation 0.42 9.80314e-07 0.2
@@ -2138,6 +2198,23 @@ Solid {
       name "ground"
       contactMaterial "ground_asphalt"
     }
+    Solid {
+      translation -20.5 -20.3 0
+      children [
+        Shape {
+          appearance PBRAppearance {
+            baseColor 0 0 0.176471
+            roughness 1
+            metalness 0
+          }
+          geometry Box {
+            size 20 20 0.2
+          }
+        }
+      ]
+      name "ground(1)"
+      contactMaterial "ground_asphalt"
+    }
   ]
   name "MAZE"
 }
@@ -2224,60 +2301,18 @@ Solid {
       ]
       name "solid(25)"
     }
-    Solid {
-      children [
-        Shape {
-          appearance PBRAppearance {
-            baseColor 0 0 0.176471
-            roughness 1
-            metalness 0
-          }
-          geometry Box {
-            size 20 20 0.2
-          }
-        }
-      ]
-      name "ground"
-      contactMaterial "ground_asphalt"
-    }
   ]
   name "MAZE(1)"
 }
 Wall {
-  translation -13.7994 -17.6321 0.95
-  rotation 0 0 1 1.5708
+  translation -18.87 -17.06 0.95
+  rotation 0 0 1 -3.1415853071795863
   name "wall(3)"
-  size 1 0.25 3
-}
-Wall {
-  translation -14.4494 -17.6321 0.95
-  rotation 0 0 1 1.5708
-  name "wall(4)"
-  size 1 0.25 3
-}
-Wall {
-  translation -15.1094 -17.6321 0.95
-  rotation 0 0 1 1.5708
-  name "wall(5)"
-  size 1 0.25 3
-}
-Wall {
-  translation -15.7894 -17.6321 0.95
-  rotation 0 0 1 1.5708
-  name "wall(6)"
-  size 1 0.25 3
-}
-Wall {
-  translation -18.84 -17.33 0.95
   size 8 0.25 3
 }
 Wall {
-  translation -13.47 -17.33 0.95
+  translation -15.15 -13.23 0.95
+  rotation 0 0 -1 1.57079
   name "wall(1)"
   size 8 0.25 3
-}
-Wall {
-  translation -13.47 -17.33 0.95
-  name "wall(2)"
-  size 1 0.25 3
 }
