@@ -11,8 +11,8 @@ WorldInfo {
   ]
 }
 Viewpoint {
-  orientation 0 1 0 0
-  position 8.604924292006285 6.7279362922671355 44.41804671222217
+  orientation 0.00942424597046686 -0.009999389249652442 -0.9999055934449621 1.630094245337729
+  position -0.21835499400658334 -0.18944627542097978 15.454956759106654
 }
 TexturedBackground {
 }
@@ -353,6 +353,10 @@ Robot {
       rotation -0.37796500919324305 0.6546520159231012 0.6546550159231742 -2.418865307179586
       scale 0.0015 0.0015 0.0015
       children [
+        DistanceSensor {
+          rotation 0 1 0 3.14159
+          type "infra-red"
+        }
         Shape {
           appearance PBRAppearance {
             roughness 1
@@ -371,6 +375,10 @@ Robot {
       rotation -0.37796500919324305 0.6546520159231012 0.6546550159231742 -2.418865307179586
       scale 0.0015 0.0015 0.0015
       children [
+        DistanceSensor {
+          rotation 0 1 0 3.14159
+          type "infra-red"
+        }
         Shape {
           appearance PBRAppearance {
             roughness 1
@@ -389,6 +397,10 @@ Robot {
       rotation -0.9999999999936517 3.5440199999775015e-06 3.694309999976548e-07 -1.5708053071795867
       scale 0.0015 0.0015 0.0015
       children [
+        DistanceSensor {
+          rotation 0 1 0 3.14159
+          type "infra-red"
+        }
         Shape {
           appearance PBRAppearance {
             roughness 1
@@ -407,6 +419,10 @@ Robot {
       rotation -0.9999999999936517 3.5440199999775015e-06 3.694309999976548e-07 -1.5708053071795867
       scale 0.0015 0.0015 0.0015
       children [
+        DistanceSensor {
+          rotation 0 1 0 3.14159
+          type "infra-red"
+        }
         Shape {
           appearance PBRAppearance {
             roughness 1
@@ -425,6 +441,10 @@ Robot {
       rotation 0.37796586633371787 0.6546507684850879 0.6546557684833196 2.41886
       scale 0.0015 0.0015 0.0015
       children [
+        DistanceSensor {
+          rotation 0 -1 0 -3.1415853071795863
+          type "infra-red"
+        }
         Shape {
           appearance PBRAppearance {
             roughness 1
@@ -443,6 +463,10 @@ Robot {
       rotation 0.37796586633371787 0.6546507684850879 0.6546557684833196 2.41886
       scale 0.0015 0.0015 0.0015
       children [
+        DistanceSensor {
+          rotation 0 1 0 3.14159
+          type "infra-red"
+        }
         Shape {
           appearance PBRAppearance {
             roughness 1
