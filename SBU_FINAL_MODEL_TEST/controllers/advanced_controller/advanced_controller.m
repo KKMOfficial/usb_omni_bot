@@ -497,34 +497,34 @@ while wb_robot_step(TIME_STEP) ~= -1
         
         
         %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-        fprintf('robot will move toward the goal. \n');
+        % fprintf('robot will move toward the goal. \n');
         % enable particle filter to initiate localization phase
         
         % use odometryModel for differential drive
         % odometryModel = odometryMotionModel;
         % odometryModel.Noise = [0.2 0.2 0.2 0.2];
         
-        odometryPose = [odometry_values(1) odometry_values(2) robot_position(3)];
+        % odometryPose = [odometry_values(1) odometry_values(2) robot_position(3)];
         
-        rangeFinderModel = likelihoodFieldSensorModel;
-        rangeFinderModel.SensorLimits = [0.01 16];
-        rangeFinderModel.Map = map;
+        % rangeFinderModel = likelihoodFieldSensorModel;
+        % rangeFinderModel.SensorLimits = [0.01 16];
+        % rangeFinderModel.Map = map;
         
-        amcl = monteCarloLocalization;
-        amcl.UseLidarScan = true;
+        % amcl = monteCarloLocalization;
+        % amcl.UseLidarScan = true;
         
-        amcl.SensorModel = rangeFinderModel;
+        % amcl.SensorModel = rangeFinderModel;
         
-        amcl.UpdateThresholds = [0.2,0.2,0.2];
-        amcl.ResamplingInterval = 1;
+        % amcl.UpdateThresholds = [0.2,0.2,0.2];
+        % amcl.ResamplingInterval = 1;
         
-        amcl.ParticleLimits = [500 5000];
-        amcl.GlobalLocalization = false;
-        amcl.InitialPose = robot_position(:,1:3);
-        amcl.InitialCovariance = eye(3)*0.5;
+        % amcl.ParticleLimits = [500 5000];
+        % amcl.GlobalLocalization = false;
+        % amcl.InitialPose = robot_position(:,1:3);
+        % amcl.InitialCovariance = eye(3)*0.5;
         
         
-        visualizationHelper = ExampleHelperAMCLVisualization(map)
+        % visualizationHelper = ExampleHelperAMCLVisualization(map)
         
         % figure;
         % drawnow;
